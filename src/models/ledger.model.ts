@@ -1,0 +1,46 @@
+import mongoose from "mongoose";
+
+interface Ledger {
+    account: mongoose.Schema.Types.ObjectId;
+    amount: number;
+    transaction: mongoose.Schema.Types.ObjectId;
+    type: "credit" | "debit";
+    createdAt:Date;
+    updatedAt:Date;
+}
+
+const ledgerSchema = new mongoose.Schema<Ledger>({
+    account: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Account",
+        required: [true,"account is required"],
+        unique: true,
+        index:true,
+        immutable:true
+    },
+    amount: {
+        type: Number,
+        required: [true,"amount is required"],
+        min: [0,"amount must be greater than 0"],
+        immutable:true
+    },
+    transaction:{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Transaction",
+        required: [true,"transaction is required"],
+        index:true,
+        immutable:true
+    },
+    type:{
+        type: String,
+        enum: ["credit", "debit"],
+        required: [true,"type is required"],
+        immutable:true
+    }
+},{timestamps:true})
+
+function preventLedgerModifictaion(){
+    
+}
+
+export const Ledger = mongoose.model<Ledger>("Ledger", ledgerSchema);
