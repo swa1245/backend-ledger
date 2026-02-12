@@ -40,7 +40,16 @@ const ledgerSchema = new mongoose.Schema<Ledger>({
 },{timestamps:true})
 
 function preventLedgerModifictaion(){
-    
+    throw new Error("Ledger cannot be modified");
 }
+
+ledgerSchema.pre("findOneAndUpdate",preventLedgerModifictaion);
+ledgerSchema.pre("updateOne",preventLedgerModifictaion);
+ledgerSchema.pre("deleteOne",preventLedgerModifictaion);
+ledgerSchema.pre("deleteMany",preventLedgerModifictaion);
+ledgerSchema.pre("updateMany",preventLedgerModifictaion);
+ledgerSchema.pre("findOneAndDelete",preventLedgerModifictaion);
+ledgerSchema.pre("findOneAndReplace",preventLedgerModifictaion);
+
 
 export const Ledger = mongoose.model<Ledger>("Ledger", ledgerSchema);
