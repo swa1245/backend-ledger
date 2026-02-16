@@ -21,7 +21,7 @@ transporter.verify((error, success) => {
 });
 
 // Function to send email
-export const sendEmail = async (to:string, subject:string, text:string, html:string) => {
+export const sendEmail = async (to: string, subject: string, text: string, html: string) => {
   try {
     const info = await transporter.sendMail({
       from: `"Backend ledger" <${env.EMAIL_USER}>`, // sender address
@@ -38,11 +38,17 @@ export const sendEmail = async (to:string, subject:string, text:string, html:str
   }
 };
 
-export async function sendRegisterEmail(userEmail:string,name:string){
+export async function sendRegisterEmail(userEmail: string, name: string) {
   const subject = "Welcome to Backend Ledger";
-  const text = `Hello ${name}` ;
+  const text = `Hello ${name}`;
   const html = `<h1>Welcome to Backend Ledger</h1>`;
   await sendEmail(userEmail, subject, text, html);
 }
 
+export async function sendTransactionEmail(userEmail: string, name: string, amount: number, type: string, toAccount: string, fromAccount: string) {
 
+  const subject = "Transaction completed";
+  const text = `Hello ${name} you have received ${amount} from ${fromAccount}`;
+  const html = `<h1>Transaction completed ${type} ${amount} from ${fromAccount} to ${toAccount}</h1> `;
+  await sendEmail(userEmail, subject, text, html);
+}

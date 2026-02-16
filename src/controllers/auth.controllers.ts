@@ -6,7 +6,7 @@ import * as emailService from "../services/email.service.js"
 
 export const userRegister = async (req: Request, res: Response) => {
     try {
-        const { name, email, password } = req.body
+        const { name, email, password, SystemUser } = req.body
         if (!name || !email || !password) {
             return res.status(400).json({ message: "All fields are required" })
         }
@@ -17,13 +17,14 @@ export const userRegister = async (req: Request, res: Response) => {
         const newUser = await userModel.create({
             name,
             email,
-            password
+            password,
+            SystemUser: SystemUser || false
         })
         const token = jwt.sign({
             id: newUser._id
         }, env.JWT_SECRET as string, { expiresIn: "1d" })
         res.cookie("token", token)
-        await emailService.sendRegisterEmail(newUser.email,newUser.name)
+        await emailService.sendRegisterEmail(newUser.email, newUser.name)
         return res.status(201).json(
             {
                 message: "User created successfully",
